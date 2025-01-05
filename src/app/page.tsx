@@ -1,101 +1,55 @@
+import { Button, TextField } from "@mui/material";
 import Image from "next/image";
+import { ThemeProvider } from '@mui/material/styles';
+import theme from '../components/theme';
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
-
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    <div>
+      <div className="flex h-screen">
+        <div className="flex-auto h-full justify-items-center"
+        style={{ 
+          flex: '6 3 auto',
+          backgroundImage: "url('/assets/images/spider.png')",
+          backgroundPosition: "calc(60%)", // Adjust these values for precise positioning
+          backgroundRepeat: "no-repeat",
+          backgroundSize: "cover" }}
+        >
+          <Image
+            src="/assets/images/OAR.png"
+            alt="Logo"
+            width={175}
+            height={175}
+            className="mt-12"
+          />
+          <p className="tracking-[0.6em] text-secondary m-4">MAKING RETOPOLOGY EASY</p>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+
+        <div className="relative flex-auto bg-background flex items-center justify-center" style={{ flex: '3 6 auto' }}>
+          <div className="relative opacity-[100] flex items-center flex-col w-4/5 h-1/3 bg-gradient-to-b from-[#060418] to-[#0d0a2b] rounded-lg p-8 z-50">
+            <Image
+              src="/assets/images/logo.png"
+              alt="CTA"
+              width={225}
+              height={225}
+              className = "z-50 opacity-[100]"
+            />
+
+            <p className="tracking-[0.6em] text-xs text-secondary mt-4">EMPOWERING CREATIVES</p>
+            <div className="flex flex-col space-y-4 w-full items-center justify-center">
+              <TextField id="standard-basic" label="Username" variant="standard" className="w-5/6"/>
+              <TextField id="standard-basic" label="Password" variant="standard" className="w-5/6" />
+              <Button variant="contained" className="w-5/6" style={{ marginTop: '2rem' }}>Login</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <Image
+        src="/assets/images/fade.png"
+        alt="Hero"
+        fill
+        className="opacity-[0.78] z-0 absolute"
+      />
     </div>
   );
 }
