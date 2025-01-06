@@ -1,7 +1,8 @@
+'use client';
+
 import { Button, TextField } from "@mui/material";
 import Image from "next/image";
-import { ThemeProvider } from '@mui/material/styles';
-import theme from '../components/theme';
+import { redirect } from 'next/navigation'
 
 export default function Home() {
   return (
@@ -39,7 +40,10 @@ export default function Home() {
             <div className="flex flex-col space-y-4 w-full items-center justify-center">
               <TextField id="standard-basic" label="Username" variant="standard" className="w-5/6"/>
               <TextField id="standard-basic" label="Password" variant="standard" className="w-5/6" />
-              <Button variant="contained" className="w-5/6" style={{ marginTop: '2rem' }}>Login</Button>
+              <Button variant="contained" className="w-5/6" 
+                style={{ marginTop: '2rem' }}
+                onClick={() => redirect('/editor')}
+              >Login</Button>
             </div>
           </div>
         </div>
