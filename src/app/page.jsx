@@ -2,9 +2,11 @@
 
 import { Button, TextField } from "@mui/material";
 import Image from "next/image";
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 export default function Home() {
+    const router = useRouter();
+
   return (
     <div>
       <div className="flex h-screen">
@@ -42,7 +44,7 @@ export default function Home() {
               <TextField id="standard-basic" label="Password" variant="standard" className="w-5/6" />
               <Button variant="contained" className="w-5/6" 
                 style={{ marginTop: '2rem' }}
-                onClick={() => redirect('/editor')}
+                onClick={() => router.push('/editor')}
               >Login</Button>
             </div>
           </div>
