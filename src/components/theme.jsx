@@ -61,6 +61,26 @@ const theme = createTheme({
                 },
             },
         },
+
+        MuiToggleButtonGroup: {
+            styleOverrides: {
+                root: {
+                    borderRadius: '0.5rem', // Border radius
+                    backgroundColor: '#23293b', // Default background color
+                },
+            },
+        },
+
+        MuiToggleButton: {
+            styleOverrides: {
+                root: {
+                    color: '#8b8e9c', // Default text color
+                    '&.Mui-selected': {
+                        color: '#ffffff', // Selected text color
+                    },
+                },
+            },
+        }
     },
 });
 
