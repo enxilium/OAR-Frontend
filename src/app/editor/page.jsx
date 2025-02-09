@@ -13,12 +13,18 @@ import OptionsPanel from "@/components/optionsPanel"
 
 export default function Page() {
     const [file, setFile] = useState(null)
+    const [output, setOutput] = useState(null)
 
     const handleFileUpload = (event) => {
         const file = event.target.files?.[0]
         if (file) {
             setFile(file)
         }
+    }
+
+    const handleOutput = () => {
+        const output = 
+        setOutput(output)
     }
 
     return (
@@ -37,8 +43,9 @@ export default function Page() {
                             {file && <ModelViewer file={file} />}
                         </div>
                         <Separator orientation="vertical" className="bg-[#4c505f]" />
-                        <div className="flex-1 flex bg-[#1e2333] items-center justify-center cursor-pointer">
-                            <span className="text-[#4c505f]">Generate Mesh</span>
+                        <div className="flex-1 flex bg-[#1e2333] items-center justify-center">
+                            {!output && <span className="text-[#4c505f]">Generated mesh will appear here</span>}
+                            {output && <ModelViewer file={output} />}
                         </div>
                         <div className="flex flex-col flex-none h-full py-16 bg-[#02050D] w-[20em]">
                             {!file && <span className="text-[#4c505f]">Upload a file to get started</span>}
