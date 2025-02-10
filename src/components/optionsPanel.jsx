@@ -7,12 +7,11 @@ import { ToggleButton, ToggleButtonGroup, Box, Typography } from '@mui/material'
 import { Cog } from 'lucide-react';
 import { Button } from "./ui/button";
 
-export default function OptionsPanel() {
+export default function OptionsPanel({ onGenerate, generatedMesh, onSave }) {
 
     const [symmetry, setSymmetry] = useState("X");
 
     useEffect(() => {
-        // Handle side effects or updates when symmetry changes
         console.log(`Symmetry changed to: ${symmetry}`);
     }, [symmetry]);
 
@@ -26,9 +25,9 @@ export default function OptionsPanel() {
         <div className="flex flex-col w-full items-center justify-between h-full">
             <div>
                 <div className="flex justify-center w-full items-center">
-                    <CustomSlider label="Polygon Count" defaultValue={50} max={100} step={1} className="w-full"/>
+                    <CustomSlider label="Polygon Count" defaultValue={50} max={100} step={1} className="w-full" />
                 </div>
-                <Separator orientation="horizontal" className="bg-[#222631] w-full my-4"/>
+                <Separator orientation="horizontal" className="bg-[#222631] w-full my-4" />
                 <div className="flex justify-center w-full items-center">
                     <CustomSlider label="Curvature" defaultValue={50} max={100} step={1} className="w-full" />
                 </div>
@@ -38,7 +37,6 @@ export default function OptionsPanel() {
                 </div>
                 <Separator orientation="horizontal" className="bg-[#222631] w-full my-4" />
                 <div className="flex justify-center w-full items-center">
-                    
                     <Box sx={{ width: 250 }}>
                         <Typography id="input-slider" gutterBottom color='#8b8e9c'>
                             Symmetry
@@ -60,11 +58,19 @@ export default function OptionsPanel() {
                 </div>
             </div>
 
-            <div>
-                <Button className="mt-8 border-2 border-[#383d50] w-36 h-16 rounded-24 upload-btn bg-[#242a3c] hover:bg-[#2e3445]">
-                    <span className="text-lg text-[#8b8e9c]">Generate</span>
+            <div className="flex flex-col items-center">
+                <Button className="mt-8 border-2 border-[#383d50] w-36 h-16 rounded-24 upload-btn bg-[#242a3c] hover:bg-[#2e3445]"
+                    onClick={onGenerate}>
+                    <span className="text-lg text-[#8b8e9c]">{generatedMesh ? "Regenerate" : "Generate"}</span>
                     <Cog color="#8b8e9c" />
                 </Button>
+                {generatedMesh && (
+                    <Button
+                        className="mt-4 border-2 border-[#383d50] w-36 h-16 rounded-24 upload-btn bg-[#242a3c] hover:bg-[#2e3445]"
+                        onClick={onSave}>
+                        <span className="text-lg text-[#8b8e9c]">Save Model</span>
+                    </Button>
+                )}
             </div>
         </div>
     )

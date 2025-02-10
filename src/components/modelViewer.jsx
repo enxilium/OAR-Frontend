@@ -1,5 +1,5 @@
 'use client'
-import { useState, useEffect, useMemo, Suspense } from 'react'
+import { useState, useEffect, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Grid, useProgress, Html, Line } from '@react-three/drei'
 import { STLLoader } from 'three/addons/loaders/STLLoader.js'
@@ -136,38 +136,109 @@ export default function ModelViewer({ file }) {
         key: 0
     })
 
+    console.log(typeof file)
+
     useEffect(() => {
         if (!file) {
-            setModelData(prev => ({ ...prev, url: null, fileType: null }))
-            return
+            setModelData(prev => ({ ...prev, url: null, fileType: null }));
+            return;
         }
 
-        const reader = new FileReader()
-        const fileType = file.name.split('.').pop().toLowerCase()
+        let fileType;
 
-        reader.onload = (e) => {
-            setModelData({
-                url: e.target.result,
-                fileType,
-                key: Date.now()
-            })
-        }
+        if (typeof file === 'string') {
+            fileType = file.split('.').pop().toLowerCase();
+            (async () => {
+                try {
+                    if (fileType === 'stl') {
+                        const res = await fetch(file);
+                        const content = await res.arrayBuffer();
+                        setModelData({ url: content, fileType, key: Date.now() });
+                    } else if (fileType === 'obj') {
+                        // Fetch the OBJ file text, parse it and convert it to STL
+                        const res = await fetch(file);
+                        const objText = await res.text();
 
-        reader.onerror = (error) => {
-            console.error('File reading error:', error)
-            alert('Error reading file')
-        }
+                        const objLoader = new OBJLoader();
+                        const parsedObj = objLoader.parse(objText);
 
-        if (fileType === 'stl') {
-            reader.readAsArrayBuffer(file)
-        } else if (fileType === 'obj') {
-            reader.readAsText(file)
-        }
+                        let mesh = null;
+                        parsedObj.traverse(child => {
+                            if (child.isMesh && !mesh) {
+                                mesh = child;
+                            }
+                        });
+                        if (!mesh) throw new Error("No mesh found in OBJ");
 
-        return () => {
-            if (reader.readyState === 1) reader.abort()
+                        // Dynamically import the STLExporter
+                        const { STLExporter } = await import('three/addons/exporters/STLExporter.js');
+                        const exporter = new STLExporter();
+                        const stlString = exporter.parse(mesh);
+
+                        // Convert the STL string to an ArrayBuffer
+                        const encoder = new TextEncoder();
+                        const stlBuffer = encoder.encode(stlString).buffer;
+
+                        setModelData({ url: stlBuffer, fileType: 'stl', key: Date.now() });
+                    } else {
+                        // Fallback: pass the file as-is
+                        const res = await fetch(file);
+                        const content = await res.text();
+                        setModelData({ url: content, fileType, key: Date.now() });
+                    }
+                } catch (error) {
+                    console.error("Error fetching file:", error);
+                    setModelData({ url: null, fileType, key: Date.now() });
+                }
+            })();
+        } else {
+            fileType = file.name.split('.').pop().toLowerCase();
+            if (fileType === 'stl') {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    setModelData({ url: reader.result, fileType, key: Date.now() });
+                };
+                reader.readAsArrayBuffer(file);
+            } else if (fileType === 'obj') {
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    try {
+                        const objText = reader.result;
+                        const objLoader = new OBJLoader();
+                        const parsedObj = objLoader.parse(objText);
+
+                        let mesh = null;
+                        parsedObj.traverse(child => {
+                            if (child.isMesh && !mesh) {
+                                mesh = child;
+                            }
+                        });
+                        if (!mesh) throw new Error("No mesh found in OBJ");
+
+                        const { STLExporter } = await import('three/addons/exporters/STLExporter.js');
+                        const exporter = new STLExporter();
+                        const stlString = exporter.parse(mesh);
+
+                        const encoder = new TextEncoder();
+                        const stlBuffer = encoder.encode(stlString).buffer;
+
+                        setModelData({ url: stlBuffer, fileType: 'stl', key: Date.now() });
+                    } catch (error) {
+                        console.error("Error converting OBJ to STL:", error);
+                        setModelData({ url: null, fileType, key: Date.now() });
+                    }
+                };
+                reader.readAsText(file);
+            } else {
+                // fallback: create an object URL if needed
+                const objectUrl = URL.createObjectURL(file);
+                setModelData({ url: objectUrl, fileType, key: Date.now() });
+                return () => {
+                    URL.revokeObjectURL(objectUrl);
+                };
+            }
         }
-    }, [file])
+    }, [file]);
 
     return (
         <Canvas
@@ -235,12 +306,6 @@ export default function ModelViewer({ file }) {
                     color="#3737ff" // Z-axis (Blue)
                     lineWidth={1.5}
                 />
-
-                {/* Origin Indicator */}
-                <mesh position={[0, 0, 0]}>
-                    <sphereGeometry args={[0.1, 16, 16]} />
-                    <meshBasicMaterial color="#ffffff" />
-                </mesh>
             </group>
 
             {/* Model */}
